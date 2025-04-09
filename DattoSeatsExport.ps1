@@ -22,9 +22,41 @@ $headers = @{
 }
 
 # ==== LOCATION OF OUTPUT CSV ====
-$scriptPath = $MyInvocation.MyCommand.Path
-$scriptDir = Split-Path $scriptPath
-$outputPath = Join-Path $scriptDir "Datto_SaaS_Seats.csv"
+$IsWindows = $env:OS -eq 'Windows_NT'
+$defaultFileName = "Datto_SaaS_Seats.csv"
+
+if ($IsWindows) {
+    try {
+        Add-Type -AssemblyName System.Windows.Forms
+
+        $folderBrowser = New-Object System.Windows.Forms.FolderBrowserDialog
+        $folderBrowser.Description = "Select folder to save the Datto SaaS Backup CSV file"
+        $folderBrowser.SelectedPath = [Environment]::GetFolderPath('Desktop')
+
+        if ($folderBrowser.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
+            $outputPath = Join-Path -Path $folderBrowser.SelectedPath -ChildPath $defaultFileName
+        } else {
+            Write-Host "❌ Cancelled. No folder selected."
+            exit
+        }
+    }
+    catch {
+        Write-Warning "⚠️ Could not open folder dialog. Please enter a path manually."
+        $manualPath = Read-Host "Enter folder path to save the CSV file (default: current directory)"
+        if ([string]::IsNullOrWhiteSpace($manualPath)) {
+            $manualPath = "."
+        }
+        $outputPath = Join-Path -Path $manualPath -ChildPath $defaultFileName
+    }
+}
+else {
+    Write-Host "💡 Non-Windows system detected. Using terminal prompt."
+    $manualPath = Read-Host "Enter folder path to save the CSV file (default: current directory)"
+    if ([string]::IsNullOrWhiteSpace($manualPath)) {
+        $manualPath = "."
+    }
+    $outputPath = Join-Path -Path $manualPath -ChildPath $defaultFileName
+}
 
 # ==== BASE URL ====
 $baseUrl = "https://api.datto.com/v1"
