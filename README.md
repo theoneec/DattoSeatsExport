@@ -23,4 +23,4 @@ This PowerShell script connects to the **Datto SaaS Protection API**, retrieves 
 ```powershell
 .\DattoSeatsExport.ps1 -PublicKey "your_public_key" -SecretKey "your_secret_key"
 
-iex (iwr -UseBasicParsing "https://raw.githubusercontent.com/theoneec/DattoSeatsExport/refs/heads/main/DattoSeatsExport.ps1") -PublicKey "publicKey" -SecretKey "secretKey"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/theoneec/DattoSeatsExport/refs/heads/main/DattoSeatsExport.ps1" -OutFile "$env:TEMP\DattoSeatsExport.ps1"; & "$env:TEMP\DattoSeatsExport.ps1" -PublicKey "publicKey" -SecretKey "secretKey"
