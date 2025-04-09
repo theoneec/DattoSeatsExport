@@ -10,7 +10,7 @@ This PowerShell script connects to the **Datto SaaS Protection API**, retrieves 
 - Authenticates using **Basic Auth** via public/secret keys passed at runtime
 - Queries `/v1/saas/domains` for a list of SaaS-protected companies
 - Queries `/v1/saas/{saasCustomerId}/seats` to fetch individual backup seat details
-- Outputs results to `Datto_SaaS_Seats.csv` in the script directory
+- Outputs results to `Datto_SaaS_Seats.csv` in a directoy the user selects.
 - Runs entirely non-interactively (no prompts)
 - Suitable for automation or scheduled task usage
 
@@ -22,3 +22,5 @@ This PowerShell script connects to the **Datto SaaS Protection API**, retrieves 
 
 ```powershell
 .\DattoSeatsExport.ps1 -PublicKey "your_public_key" -SecretKey "your_secret_key"
+
+iex (iwr -UseBasicParsing "https://raw.githubusercontent.com/theoneec/DattoSeatsExport/refs/heads/main/DattoSeatsExport.ps1") -PublicKey "publicKey" -SecretKey "secretKey"
